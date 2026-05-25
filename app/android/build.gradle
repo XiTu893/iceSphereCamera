@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.9.10'
+    ext.kotlin_version = '1.8.22'
     repositories {
         google()
         mavenCentral()
@@ -24,31 +24,18 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 
-// 强制统一所有子项目的Kotlin版本，解决第三方插件Kotlin版本过低的问题
 subprojects {
     afterEvaluate {
-        // 统一Java兼容性
         if (project.hasProperty('android')) {
             project.android.compileOptions {
                 sourceCompatibility JavaVersion.VERSION_1_8
                 targetCompatibility JavaVersion.VERSION_1_8
             }
         }
-        // 仅对应用模块设置kotlinOptions（LibraryExtension没有kotlinOptions方法）
         if (project.name == 'app' && project.hasProperty('android')) {
             project.android.kotlinOptions {
                 jvmTarget = '1.8'
             }
-        }
-    }
-    // 强制统一Kotlin依赖版本（在配置阶段设置，不需要afterEvaluate）
-    project.configurations.all { config ->
-        resolutionStrategy {
-            force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-            force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-            force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-            force "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-            force "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         }
     }
 }
