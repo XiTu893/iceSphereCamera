@@ -5,10 +5,12 @@ on:
     branches: [ main, develop ]
     paths:
       - 'app/**'
+      - '.github/workflows/flutter-build.yml'
   pull_request:
     branches: [ main ]
     paths:
       - 'app/**'
+      - '.github/workflows/flutter-build.yml'
 
 defaults:
   run:
