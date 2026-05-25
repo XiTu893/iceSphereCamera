@@ -17,6 +17,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 映射本地文件上传目录为静态资源路径
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
+        // 全景浏览页面静态资源（classpath:/static/ 默认已映射，这里显式声明确保优先级）
+        registry.addResourceHandler("/panorama.html")
+                .addResourceLocations("classpath:/static/panorama.html");
     }
 
 }

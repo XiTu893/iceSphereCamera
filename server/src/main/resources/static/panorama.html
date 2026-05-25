@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>球形全景拍摄 - 3D全景浏览</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        #canvas-container { width: 100vw; height: 100vh; position: relative; }
+        canvas { display: block; }
+
+        /* 顶部信息栏 */
+        .top-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+            padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
+            transition: opacity 0.3s;
+        }
+        .top-bar.hidden { opacity: 0; pointer-events: none; }
+        .scene-name { color: #fff; font-size: 18px; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+        .scene-info { color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 2px; }
+
+        /* 底部控制栏 */
+        .bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+            background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+            padding: 20px 24px 24px; display: flex; justify-content: center; align-items: center; gap: 12px;
+            transition: opacity 0.3s;
+        }
+        .bottom-bar.hidden { opacity: 0; pointer-events: none; }
+
+        .ctrl-btn {
+            width: 44px; height: 44px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.15); color: #fff; font-size: 20px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px); transition: all 0.2s;
+        }
+        .ctrl-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+        .ctrl-btn:active { transform: scale(0.95); }
+        .ctrl-btn.active { background: rgba(30,136,229,0.6); }
+
+        /* 场景列表侧边栏 */
+        .scene-panel {
+            position: fixed; right: -320px; top: 0; bottom: 0; width: 300px; z-index: 200;
+            background: rgba(20,20,25,0.95); backdrop-filter: blur(16px);
+            transition: right 0.3s ease; padding: 20px; overflow-y: auto;
+        }
+        .scene-panel.open { right: 0; }
+        .scene-panel h3 { color: #fff; font-size: 16px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .scene-item {
+            padding: 12px; border-radius: 10px; cursor: pointer; margin-bottom: 8px;
+            background: rgba(255,255,255,0.05); transition: all 0.2s; display: flex; align-items: center; gap: 12px;
+        }
+        .scene-item:hover { background: rgba(255,255,255,0.1); }
+        .scene-item.active { background: rgba(30,136,229,0.3); border: 1px solid rgba(30,136,229,0.5); }
+        .scene-thumb { width: 60px; height: 40px; border-radius: 6px; object-fit: cover; background: #333; }
+        .scene-item-name { color: #fff; font-size: 14px; }
+        .scene-item-info { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 2px; }
+
+        /* 热点标记 */
+        .hotspot {
+            position: absolute; z-index: 50; cursor: pointer;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(30,136,229,0.8); border: 2px solid #fff;
+            display: flex; align-items: center; justify-content: center;
+            animation: hotspot-pulse 2s infinite; transition: transform 0.2s;
+        }
+        .hotspot:hover { transform: scale(1.2); }
+        .hotspot svg { width: 18px; height: 18px; fill: #fff; }
+        .hotspot-label {
+            position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: #fff; padding: 4px 10px; border-radius: 4px;
+            font-size: 12px; white-space: nowrap; pointer-events: none;
+        }
+        @keyframes hotspot-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(30,136,229,0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(30,136,229,0); }
+        }
+
+        /* 加载状态 */
+        .loading-overlay {
+            position: fixed; inset: 0; z-index: 300; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s;
+        }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+        .loading-spinner { width: 48px; height: 48px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #1E88E5; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: rgba(255,255,255,0.6); margin-top: 16px; font-size: 14px; }
+
+        /* VR模式提示 */
+        .vr-badge {
+            position: fixed; top: 16px; right: 16px; z-index: 150;
+            background: rgba(30,136,229,0.8); color: #fff; padding: 4px 12px;
+            border-radius: 4px; font-size: 12px; font-weight: 600; display: none;
+        }
+        .vr-badge.show { display: block; }
+
+        /* FOV指示器 */
+        .fov-indicator {
+            position: fixed; bottom: 80px; right: 24px; z-index: 100;
+            color: rgba(255,255,255,0.5); font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <!-- 加载状态 -->
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">正在加载全景图...</div>
+    </div>
+
+    <!-- 顶部信息栏 -->
+    <div class="top-bar" id="topBar">
+        <div>
+            <div class="scene-name" id="sceneName">球形全景拍摄</div>
+            <div class="scene-info" id="sceneInfo">拖拽旋转 · 滚轮缩放</div>
+        </div>
+        <button class="ctrl-btn" onclick="toggleScenePanel()" title="场景列表">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+        </button>
+    </div>
+
+    <!-- 底部控制栏 -->
+    <div class="bottom-bar" id="bottomBar">
+        <button class="ctrl-btn" onclick="zoomIn()" title="放大">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/><path d="M12 10h-2v2H8v-2H6V8h2V6h2v2h2v2z"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="resetView()" title="重置视角">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="zoomOut()" title="缩小">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/><path d="M12 10H6V8h6v2z"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="toggleAutoRotate()" id="autoRotateBtn" title="自动旋转">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="toggleFullscreen()" title="全屏">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+    </div>
+
+    <!-- 场景列表侧边栏 -->
+    <div class="scene-panel" id="scenePanel">
+        <h3>场景列表</h3>
+        <div id="sceneList"></div>
+    </div>
+
+    <!-- VR标识 -->
+    <div class="vr-badge" id="vrBadge">VR MODE</div>
+
+    <!-- FOV指示器 -->
+    <div class="fov-indicator" id="fovIndicator">FOV: 75°</div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+
+        // ===== 全局状态 =====
+        let camera, scene, renderer, sphere;
+        let isUserDragging = false;
+        let prevPointerX = 0, prevPointerY = 0;
+        let lon = 0, lat = 0, targetLon = 0, targetLat = 0;
+        let fov = 75, targetFov = 75;
+        let autoRotate = false;
+        let scenes = [];
+        let currentSceneIndex = 0;
+        let hotspots = [];
+
+        // ===== 初始化 =====
+        function init() {
+            const container = document.getElementById('canvas-container');
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // 创建球体
+            const geometry = new THREE.SphereGeometry(500, 60, 40);
+            geometry.scale(-1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ color: 0x222222 });
+            sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+
+            // 事件绑定
+            renderer.domElement.addEventListener('pointerdown', onPointerDown);
+            renderer.domElement.addEventListener('pointermove', onPointerMove);
+            renderer.domElement.addEventListener('pointerup', onPointerUp);
+            renderer.domElement.addEventListener('wheel', onWheel);
+            window.addEventListener('resize', onResize);
+
+            // 触摸缩放
+            let lastTouchDist = 0;
+            renderer.domElement.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    lastTouchDist = getTouchDist(e.touches);
+                }
+            });
+            renderer.domElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2) {
+                    const dist = getTouchDist(e.touches);
+                    targetFov += (lastTouchDist - dist) * 0.1;
+                    targetFov = Math.max(30, Math.min(120, targetFov));
+                    lastTouchDist = dist;
+                }
+            });
+
+            // 从URL参数加载全景图
+            const params = new URLSearchParams(window.location.search);
+            const imageUrl = params.get('url');
+            const sceneName = params.get('name') || '球形全景拍摄';
+            const scenesJson = params.get('scenes');
+
+            if (scenesJson) {
+                try { scenes = JSON.parse(decodeURIComponent(scenesJson)); } catch(e) { scenes = []; }
+            }
+            if (imageUrl) {
+                loadPanorama(imageUrl, sceneName);
+            }
+
+            // 渲染场景列表
+            renderSceneList();
+
+            animate();
+        }
+
+        // ===== 全景图加载 =====
+        function loadPanorama(url, name) {
+            const loader = new THREE.TextureLoader();
+            loader.crossOrigin = 'anonymous';
+            loader.load(url, (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                sphere.material.dispose();
+                sphere.material = new THREE.MeshBasicMaterial({ map: texture });
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('sceneName').textContent = name || '球形全景拍摄';
+            }, undefined, (err) => {
+                console.error('全景图加载失败:', err);
+                document.getElementById('loading').innerHTML = '<div style="color:#ff5252;font-size:16px;">加载失败，请检查图片地址</div>';
+            });
+        }
+
+        // ===== 交互处理 =====
+        function onPointerDown(e) {
+            isUserDragging = true;
+            prevPointerX = e.clientX;
+            prevPointerY = e.clientY;
+            autoRotate = false;
+            document.getElementById('autoRotateBtn').classList.remove('active');
+        }
+
+        function onPointerMove(e) {
+            if (!isUserDragging) return;
+            targetLon -= (e.clientX - prevPointerX) * 0.2;
+            targetLat += (e.clientY - prevPointerY) * 0.2;
+            targetLat = Math.max(-85, Math.min(85, targetLat));
+            prevPointerX = e.clientX;
+            prevPointerY = e.clientY;
+        }
+
+        function onPointerUp() { isUserDragging = false; }
+
+        function onWheel(e) {
+            targetFov += e.deltaY * 0.05;
+            targetFov = Math.max(30, Math.min(120, targetFov));
+        }
+
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function getTouchDist(touches) {
+            const dx = touches[0].clientX - touches[1].clientX;
+            const dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // ===== 动画循环 =====
+        function animate() {
+            requestAnimationFrame(animate);
+            lon += (targetLon - lon) * 0.1;
+            lat += (targetLat - lat) * 0.1;
+            fov += (targetFov - fov) * 0.1;
+
+            if (autoRotate) targetLon += 0.05;
+
+            camera.fov = fov;
+            camera.updateProjectionMatrix();
+            document.getElementById('fovIndicator').textContent = `FOV: ${Math.round(fov)}°`;
+
+            const phi = THREE.MathUtils.degToRad(90 - lat);
+            const theta = THREE.MathUtils.degToRad(lon);
+            const target = new THREE.Vector3(
+                500 * Math.sin(phi) * Math.cos(theta),
+                500 * Math.cos(phi),
+                500 * Math.sin(phi) * Math.sin(theta)
+            );
+            camera.lookAt(target);
+            renderer.render(scene, camera);
+        }
+
+        // ===== 控制函数 =====
+        window.zoomIn = () => { targetFov = Math.max(30, targetFov - 10); };
+        window.zoomOut = () => { targetFov = Math.min(120, targetFov + 10); };
+        window.resetView = () => { targetLon = 0; targetLat = 0; targetFov = 75; autoRotate = false; document.getElementById('autoRotateBtn').classList.remove('active'); };
+        window.toggleAutoRotate = () => { autoRotate = !autoRotate; document.getElementById('autoRotateBtn').classList.toggle('active'); };
+        window.toggleFullscreen = () => {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        };
+
+        // ===== 场景列表 =====
+        window.toggleScenePanel = () => {
+            document.getElementById('scenePanel').classList.toggle('open');
+        };
+
+        function renderSceneList() {
+            const listEl = document.getElementById('sceneList');
+            if (scenes.length === 0) { listEl.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:13px;">暂无其他场景</div>'; return; }
+            listEl.innerHTML = scenes.map((s, i) => `
+                <div class="scene-item ${i === currentSceneIndex ? 'active' : ''}" onclick="switchScene(${i})">
+                    <img class="scene-thumb" src="${s.thumbUrl || s.panUrl}" onerror="this.style.background='#333'" />
+                    <div>
+                        <div class="scene-item-name">${s.sceneName || '场景' + (i + 1)}</div>
+                        <div class="scene-item-info">${s.createTime || ''}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.switchScene = (index) => {
+            if (index < 0 || index >= scenes.length) return;
+            currentSceneIndex = index;
+            const s = scenes[index];
+            document.getElementById('loading').classList.remove('hidden');
+            loadPanorama(s.panUrl, s.sceneName);
+            renderSceneList();
+            document.getElementById('scenePanel').classList.remove('open');
+        };
+
+        // 启动
+        init();
+    </script>
+</body>
+</html>
