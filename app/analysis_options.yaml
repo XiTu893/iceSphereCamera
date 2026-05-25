@@ -1,0 +1,20 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_final_fields: true
+    prefer_final_locals: true
+    avoid_print: false
+    always_declare_return_types: true
+    annotate_overrides: true
+    empty_constructor_bodies: true
+    prefer_void_to_null: true
+    unnecessary_new: true
+    sort_constructors_first: true
+    slash_for_doc_comments: true
+
+analyzer:
+  errors:
+    invalid_annotation_target: ignore

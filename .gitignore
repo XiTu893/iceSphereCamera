@@ -1,0 +1,69 @@
+# ========================
+# Flutter / Dart
+# ========================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+flutter_*.png
+
+# Flutter build
+app/android/app/debug
+app/android/app/profile
+app/android/app/release
+app/ios/Flutter/Flutter.framework
+app/ios/Flutter/Flutter.podspec
+app/ios/Pods/
+app/ios/.symlinks/
+
+# ========================
+# Java / Maven / SpringBoot
+# ========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/wrapper/maven-wrapper.jar
+
+# ========================
+# IDE
+# ========================
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+
+# ========================
+# OS
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.local
+*.keystore
+*.jks
+application-prod.yml
+
+# ========================
+# Node (for Three.js assets)
+# ========================
+node_modules/
+
+# ========================
+# Trae
+# ========================
+.trae/
