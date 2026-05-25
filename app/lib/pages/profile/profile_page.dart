@@ -260,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(width: 12),
-            const Text('冰球全景看房'),
+            const Text('球形全景拍摄'),
           ],
         ),
         content: const Column(

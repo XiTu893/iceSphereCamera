@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      '冰球全景看房',
+                      '球形全景拍摄',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 26,

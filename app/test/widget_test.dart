@@ -14,7 +14,7 @@ void main() {
   });
 
   test('字符串操作测试', () {
-    const appName = '冰球全景看房';
+    const appName = '球形全景拍摄';
     expect(appName.isNotEmpty, isTrue);
     expect(appName.length, equals(6));
   });

@@ -97,7 +97,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                   const SizedBox(height: 24),
                   // 应用名称
                   const Text(
-                    '冰球全景看房',
+                    '球形全景拍摄',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
