@@ -11,6 +11,9 @@ defaults:
   run:
     working-directory: app
 
+permissions:
+  contents: write
+
 jobs:
   build-android:
     runs-on: ubuntu-latest
