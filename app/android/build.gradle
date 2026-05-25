@@ -24,10 +24,6 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 
-subprojects {
-    project.evaluationDependsOn(':app')
-}
-
 // 强制统一所有子项目的Kotlin版本，解决第三方插件Kotlin版本过低的问题
 subprojects {
     afterEvaluate {
@@ -44,15 +40,15 @@ subprojects {
                 jvmTarget = '1.8'
             }
         }
-        // 强制统一Kotlin依赖版本
-        project.configurations.all { config ->
-            resolutionStrategy {
-                force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-                force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-                force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-                force "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-                force "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-            }
+    }
+    // 强制统一Kotlin依赖版本（在配置阶段设置，不需要afterEvaluate）
+    project.configurations.all { config ->
+        resolutionStrategy {
+            force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         }
     }
 }
