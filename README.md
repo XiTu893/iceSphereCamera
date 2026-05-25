@@ -122,4 +122,8 @@ java -jar target/ice-sphere-camera-1.0.0.jar --spring.profiles.active=dev
 
 ## License
 
-MIT License
+个人使用免费，企业使用需要授权。
+
+Personal use is free, but commercial/enterprise use requires authorization.
+
+详见 [LICENSE](LICENSE)
