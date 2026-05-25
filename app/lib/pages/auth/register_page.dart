@@ -116,10 +116,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
+                  Text(
                     '注册后即可开始全景看房',
                     style: TextStyle(
-                      color: Colors.white.withOpacity( 0.8),
+                      color: Colors.white.withOpacity(0.8),
                       fontSize: 14,
                     ),
                   ),

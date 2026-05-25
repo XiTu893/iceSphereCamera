@@ -370,7 +370,7 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
   }
 
   /// 将图片打包为ZIP文件
-  Future<String?>> _packImagesToZip() async {
+  Future<String?> _packImagesToZip() async {
     try {
       final archive = Archive();
 

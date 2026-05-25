@@ -193,7 +193,7 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
             ),
             if (_house!.address != null)
               InfoRow(label: '地址', value: _house!.address!),
-            if _house!.description != null) ...[
+            if (_house!.description != null) ...[
               const SizedBox(height: 8),
               const Text(
                 '房源描述',
