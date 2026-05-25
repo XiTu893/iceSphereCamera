@@ -14,8 +14,6 @@ defaults:
 jobs:
   build-android:
     runs-on: ubuntu-latest
-    outputs:
-      apk_path: ${{ steps.build.outputs.apk_path }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,11 +33,19 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK
-        id: build
+      - name: Fix plugin Kotlin versions
         run: |
-          flutter build apk --release
-          echo "apk_path=app/build/app/outputs/flutter-apk/app-release.apk" >> $GITHUB_OUTPUT
+          # 修补第三方插件的Kotlin版本，解决AGP要求Kotlin 1.5.20+的问题
+          find . -path "*/android/build.gradle" | while read f; do
+            if grep -q "kotlin-gradle-plugin:1\.[0-3]\." "$f"; then
+              echo "Patching Kotlin version in: $f"
+              sed -i 's/kotlin-gradle-plugin:1\.[0-3]\.[0-9]*/kotlin-gradle-plugin:1.9.10/g' "$f"
+              sed -i "s/ext.kotlin_version = '1\.[0-3]\.[0-9]*'/ext.kotlin_version = '1.9.10'/g" "$f"
+            fi
+          done
+
+      - name: Build APK
+        run: flutter build apk --release
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -108,6 +114,16 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Fix plugin Kotlin versions
+        run: |
+          find . -path "*/android/build.gradle" | while read f; do
+            if grep -q "kotlin-gradle-plugin:1\.[0-3]\." "$f"; then
+              echo "Patching Kotlin version in: $f"
+              sed -i '' 's/kotlin-gradle-plugin:1\.[0-3]\.[0-9]*/kotlin-gradle-plugin:1.9.10/g' "$f"
+              sed -i '' "s/ext.kotlin_version = '1\.[0-3]\.[0-9]*'/ext.kotlin_version = '1.9.10'/g" "$f"
+            fi
+          done
 
       - name: Install CocoaPods
         run: |
