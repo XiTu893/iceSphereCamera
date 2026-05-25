@@ -6,11 +6,6 @@ on:
     paths:
       - 'app/**'
       - '.github/workflows/flutter-build.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'app/**'
-      - '.github/workflows/flutter-build.yml'
 
 defaults:
   run:
@@ -19,6 +14,8 @@ defaults:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+    outputs:
+      apk_path: ${{ steps.build.outputs.apk_path }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,27 +32,67 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Flutter doctor
-        run: flutter doctor -v
-
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Generate Gradle Wrapper
+      - name: Build APK
+        id: build
         run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew --version 2>&1 || true
-
-      - name: Build APK with verbose logging
-        run: flutter build apk --release --verbose 2>&1 | tail -100
+          flutter build apk --release
+          echo "apk_path=app/build/app/outputs/flutter-apk/app-release.apk" >> $GITHUB_OUTPUT
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
-        if: success()
         with:
           name: app-release-apk
           path: app/build/app/outputs/flutter-apk/app-release.apk
+
+  release:
+    needs: build-android
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release-apk
+          path: ./release-assets/
+
+      - name: Get version info
+        id: version
+        run: |
+          VERSION="v1.0.0-$(date +'%Y%m%d')-$(echo ${{ github.sha }} | cut -c1-7)"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "球形全景拍摄 ${{ steps.version.outputs.version }}"
+          body: |
+            ## 球形全景拍摄 ${{ steps.version.outputs.version }}
+
+            ### 更新内容
+            - 3D球形引导拍摄
+            - 全景浏览（手势滑动/缩放）
+            - 房源管理
+            - FTP上传 / 分享导出到PC
+            - 云端全景拼接
+
+            ### 安装说明
+            1. 下载 `app-release.apk`
+            2. 在Android手机上开启"允许安装未知来源应用"
+            3. 安装APK即可使用
+
+            > 要求：Android 9.0+ (minSdk 24)
+          files: |
+            release-assets/app-release.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-ios:
     runs-on: macos-latest
@@ -78,4 +115,4 @@ jobs:
           pod install || true
 
       - name: Build iOS (no code signing)
-        run: flutter build ios --no-codesign --verbose 2>&1 | tail -100
+        run: flutter build ios --no-codesign
