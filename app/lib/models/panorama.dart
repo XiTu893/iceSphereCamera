@@ -130,6 +130,33 @@ class StitchingTask {
     };
   }
 
+  /// 复制并修改部分字段
+  StitchingTask copyWith({
+    String? taskId,
+    int? houseId,
+    String? sceneName,
+    int? totalImages,
+    int? processedImages,
+    double? progress,
+    String? status,
+    String? resultUrl,
+    String? createTime,
+    String? errorMessage,
+  }) {
+    return StitchingTask(
+      taskId: taskId ?? this.taskId,
+      houseId: houseId ?? this.houseId,
+      sceneName: sceneName ?? this.sceneName,
+      totalImages: totalImages ?? this.totalImages,
+      processedImages: processedImages ?? this.processedImages,
+      progress: progress ?? this.progress,
+      status: status ?? this.status,
+      resultUrl: resultUrl ?? this.resultUrl,
+      createTime: createTime ?? this.createTime,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+
   /// 任务状态显示名称
   String get statusLabel {
     switch (status) {

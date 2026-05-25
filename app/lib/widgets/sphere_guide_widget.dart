@@ -467,7 +467,7 @@ class _SphereGuidePainter extends CustomPainter {
   }
 
   /// 绕Y轴旋转后的Z坐标
-  double _rotateZ(double x, double y, double z, {double rotY = 0}) {
+  double _rotateZ(double x, double y, double z, {double rotX = 0, double rotY = 0}) {
     final cosY = cos(rotY);
     final sinY = sin(rotY);
     final cosX = cos(rotX);
