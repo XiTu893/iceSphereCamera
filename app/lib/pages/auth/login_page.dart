@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       width: 90,
                       height: 90,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: Colors.white.withOpacity( 0.2),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
+                            color: Colors.black.withOpacity( 0.1),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -213,7 +213,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: ThemeConfig.primaryColor.withValues(alpha: 0.3),
+                                        color: ThemeConfig.primaryColor.withOpacity( 0.3),
                                         blurRadius: 8,
                                         offset: const Offset(0, 4),
                                       ),

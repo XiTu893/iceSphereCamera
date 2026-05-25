@@ -404,7 +404,7 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withValues(alpha: 0.6),
+                Colors.black.withOpacity( 0.6),
                 Colors.transparent,
               ],
             ),
@@ -417,7 +417,7 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Colors.white.withOpacity( 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(Icons.close, color: Colors.white, size: 20),
@@ -431,8 +431,8 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: _autoCapture
-                        ? ThemeConfig.primaryColor.withValues(alpha: 0.8)
-                        : Colors.white.withValues(alpha: 0.2),
+                        ? ThemeConfig.primaryColor.withOpacity( 0.8)
+                        : Colors.white.withOpacity( 0.2),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -459,7 +459,7 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Colors.white.withOpacity( 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(Icons.refresh, color: Colors.white, size: 20),
@@ -479,7 +479,7 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
       right: 12,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.4),
+          color: Colors.black.withOpacity( 0.4),
           shape: BoxShape.circle,
         ),
         padding: const EdgeInsets.all(4),
@@ -509,7 +509,7 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
               end: Alignment.bottomCenter,
               colors: [
                 Colors.transparent,
-                Colors.black.withValues(alpha: 0.7),
+                Colors.black.withOpacity( 0.7),
               ],
             ),
           ),
@@ -538,7 +538,7 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
                         '目标角度：偏航${_shootingPositions[_currentPosition].targetYaw.toStringAsFixed(0)}° '
                         '俯仰${_shootingPositions[_currentPosition].targetPitch.toStringAsFixed(0)}°',
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: Colors.white.withOpacity( 0.7),
                           fontSize: 11,
                         ),
                       ),
@@ -647,8 +647,8 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             color: _isAtCorrectAngle
-                ? ThemeConfig.successColor.withValues(alpha: 0.8)
-                : Colors.black.withValues(alpha: 0.5),
+                ? ThemeConfig.successColor.withOpacity( 0.8)
+                : Colors.black.withOpacity( 0.5),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(

@@ -251,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: ThemeConfig.primaryColor.withValues(alpha: 0.1),
+                color: ThemeConfig.primaryColor.withOpacity( 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(

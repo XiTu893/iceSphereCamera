@@ -97,7 +97,7 @@ class _PanoramaViewerPageState extends State<PanoramaViewerPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withValues(alpha: 0.6),
+              Colors.black.withOpacity( 0.6),
               Colors.transparent,
             ],
           ),
@@ -110,7 +110,7 @@ class _PanoramaViewerPageState extends State<PanoramaViewerPage> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: Colors.white.withOpacity( 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
@@ -134,7 +134,7 @@ class _PanoramaViewerPageState extends State<PanoramaViewerPage> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: Colors.white.withOpacity( 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.fullscreen, color: Colors.white, size: 20),

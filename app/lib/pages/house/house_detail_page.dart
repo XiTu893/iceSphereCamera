@@ -236,7 +236,7 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: ThemeConfig.primaryColor.withValues(alpha: 0.1),
+                color: ThemeConfig.primaryColor.withOpacity( 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -305,7 +305,7 @@ class _PanoramaSceneCard extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: ThemeConfig.primaryColor.withValues(alpha: 0.1),
+                  color: ThemeConfig.primaryColor.withOpacity( 0.1),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),

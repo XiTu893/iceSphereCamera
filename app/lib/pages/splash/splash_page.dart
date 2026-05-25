@@ -85,7 +85,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: Colors.white.withOpacity( 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -110,7 +110,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                   Text(
                     '720°沉浸式全景看房体验',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: Colors.white.withOpacity( 0.8),
                       fontSize: 14,
                       letterSpacing: 1,
                     ),
@@ -123,7 +123,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white.withValues(alpha: 0.7),
+                        Colors.white.withOpacity( 0.7),
                       ),
                     ),
                   ),

@@ -94,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
+                          color: Colors.white.withOpacity( 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -119,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const Text(
                     '注册后即可开始全景看房',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: Colors.white.withOpacity( 0.8),
                       fontSize: 14,
                     ),
                   ),
@@ -132,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
+                          color: Colors.black.withOpacity( 0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -247,8 +247,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                                     decoration: BoxDecoration(
                                       color: isSelected
-                                          ? ThemeConfig.primaryColor.withValues(alpha: 0.1)
-                                          : Colors.grey.withValues(alpha: 0.05),
+                                          ? ThemeConfig.primaryColor.withOpacity( 0.1)
+                                          : Colors.grey.withOpacity( 0.05),
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(
                                         color: isSelected
@@ -307,7 +307,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: ThemeConfig.primaryColor.withValues(alpha: 0.3),
+                                      color: ThemeConfig.primaryColor.withOpacity( 0.3),
                                       blurRadius: 8,
                                       offset: const Offset(0, 4),
                                     ),

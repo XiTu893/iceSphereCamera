@@ -139,7 +139,7 @@ class _FtpSettingsPageState extends State<FtpSettingsPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: ThemeConfig.infoColor.withValues(alpha: 0.1),
+                  color: ThemeConfig.infoColor.withOpacity( 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Row(
@@ -251,8 +251,8 @@ class _FtpSettingsPageState extends State<FtpSettingsPage> {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: _testResult!
-                        ? ThemeConfig.successColor.withValues(alpha: 0.1)
-                        : ThemeConfig.errorColor.withValues(alpha: 0.1),
+                        ? ThemeConfig.successColor.withOpacity( 0.1)
+                        : ThemeConfig.errorColor.withOpacity( 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(

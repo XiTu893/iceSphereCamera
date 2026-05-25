@@ -162,7 +162,7 @@ class _SphereGuidePainter extends CustomPainter {
 
     // 绘制背景半透明圆
     final bgPaint = Paint()
-      ..color = const Color(0xFF1A237E).withValues(alpha: 0.15)
+      ..color = const Color(0xFF1A237E).withOpacity( 0.15)
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, radius, bgPaint);
 
@@ -181,7 +181,7 @@ class _SphereGuidePainter extends CustomPainter {
   /// 绘制经纬线
   void _drawGridLines(Canvas canvas, Offset center, double radius) {
     final gridPaint = Paint()
-      ..color = const Color(0xFF1E88E5).withValues(alpha: 0.2)
+      ..color = const Color(0xFF1E88E5).withOpacity( 0.2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.8;
 
@@ -244,7 +244,7 @@ class _SphereGuidePainter extends CustomPainter {
 
     // 绘制赤道线（加粗）
     final equatorPaint = Paint()
-      ..color = const Color(0xFF1E88E5).withValues(alpha: 0.4)
+      ..color = const Color(0xFF1E88E5).withOpacity( 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
@@ -400,7 +400,7 @@ class _SphereGuidePainter extends CustomPainter {
 
     // 从中心到目标位置绘制箭头
     final arrowPaint = Paint()
-      ..color = const Color(0xFF1E88E5).withValues(alpha: 0.6)
+      ..color = const Color(0xFF1E88E5).withOpacity( 0.6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;

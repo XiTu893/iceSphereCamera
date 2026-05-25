@@ -155,7 +155,7 @@ class _PanoramaUploadPageState extends State<PanoramaUploadPage> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: ThemeConfig.infoColor.withValues(alpha: 0.1),
+                color: ThemeConfig.infoColor.withOpacity( 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Row(
@@ -281,7 +281,7 @@ class _ImageThumbnail extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Colors.black.withOpacity( 0.5),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -309,10 +309,10 @@ class _AddImageButton extends StatelessWidget {
         width: 80,
         height: 80,
         decoration: BoxDecoration(
-          color: ThemeConfig.primaryColor.withValues(alpha: 0.1),
+          color: ThemeConfig.primaryColor.withOpacity( 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: ThemeConfig.primaryColor.withValues(alpha: 0.3),
+            color: ThemeConfig.primaryColor.withOpacity( 0.3),
             width: 1.5,
             style: BorderStyle.solid,
           ),

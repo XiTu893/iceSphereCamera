@@ -69,10 +69,10 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: ThemeConfig.successColor.withValues(alpha: 0.1),
+        color: ThemeConfig.successColor.withOpacity( 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ThemeConfig.successColor.withValues(alpha: 0.3),
+          color: ThemeConfig.successColor.withOpacity( 0.3),
         ),
       ),
       child: Column(
@@ -166,7 +166,7 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.5),
+                color: Colors.black.withOpacity( 0.5),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
@@ -230,7 +230,7 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: ThemeConfig.infoColor.withValues(alpha: 0.1),
+        color: ThemeConfig.infoColor.withOpacity( 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -254,7 +254,7 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
                   '可通过USB连接手机，在文件管理器中找到拍摄图片',
                   style: TextStyle(
                     fontSize: 11,
-                    color: ThemeConfig.infoColor.withValues(alpha: 0.8),
+                    color: ThemeConfig.infoColor.withOpacity( 0.8),
                   ),
                 ),
               ],
@@ -312,8 +312,8 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: _ftpResult!.success
-                  ? ThemeConfig.successColor.withValues(alpha: 0.1)
-                  : ThemeConfig.errorColor.withValues(alpha: 0.1),
+                  ? ThemeConfig.successColor.withOpacity( 0.1)
+                  : ThemeConfig.errorColor.withOpacity( 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
