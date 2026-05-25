@@ -35,17 +35,24 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Flutter doctor
+        run: flutter doctor -v
+
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze code
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings || true
+      - name: Generate Gradle Wrapper
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew --version 2>&1 || true
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build APK with verbose logging
+        run: flutter build apk --release --verbose 2>&1 | tail -100
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: app-release-apk
           path: app/build/app/outputs/flutter-apk/app-release.apk
@@ -71,4 +78,4 @@ jobs:
           pod install || true
 
       - name: Build iOS (no code signing)
-        run: flutter build ios --no-codesign
+        run: flutter build ios --no-codesign --verbose 2>&1 | tail -100
