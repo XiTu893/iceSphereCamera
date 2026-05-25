@@ -171,7 +171,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 /// 圆角按钮
 class RoundedButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? color;
   final Color? textColor;
   final double borderRadius;
@@ -183,7 +183,7 @@ class RoundedButton extends StatelessWidget {
   const RoundedButton({
     super.key,
     required this.text,
-    required this.onPressed,
+    this.onPressed,
     this.color,
     this.textColor,
     this.borderRadius = 10,

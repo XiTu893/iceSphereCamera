@@ -239,7 +239,7 @@ class _FtpSettingsPageState extends State<FtpSettingsPage> {
               // 测试连接按钮
               RoundedButton(
                 text: '测试连接',
-                onPressed: _isTesting ? null : () => _testConnection(),
+                onPressed: _isTesting ? null : _testConnection,
                 icon: Icons.network_check,
                 color: Colors.teal,
                 isLoading: _isTesting,

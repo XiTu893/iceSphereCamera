@@ -191,7 +191,7 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
         // 分享/复制到PC
         RoundedButton(
           text: '分享/导出到PC',
-          onPressed: _isPackingZip ? null : () => _shareToPC(),
+          onPressed: _isPackingZip ? null : _shareToPC,
           icon: Icons.share,
           isLoading: _isPackingZip,
         ),
@@ -289,7 +289,7 @@ class _CaptureResultPageState extends State<CaptureResultPage> {
           ),
         RoundedButton(
           text: '上传到FTP服务器',
-          onPressed: isFtpConfigured && !_isUploadingFtp ? () => _uploadToFtp() : null,
+          onPressed: isFtpConfigured && !_isUploadingFtp ? _uploadToFtp : null,
           icon: Icons.upload_file,
           color: Colors.orange,
           isLoading: _isUploadingFtp,
