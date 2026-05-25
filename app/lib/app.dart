@@ -9,6 +9,8 @@ import 'pages/home/home_page.dart';
 import 'pages/house/house_detail_page.dart';
 import 'pages/house/house_form_page.dart';
 import 'pages/camera/camera_guide_page.dart';
+import 'pages/camera/capture_result_page.dart';
+import 'pages/camera/ftp_settings_page.dart';
 import 'pages/panorama/panorama_viewer_page.dart';
 import 'pages/panorama/panorama_upload_page.dart';
 import 'pages/panorama/stitching_progress_page.dart';
@@ -35,6 +37,8 @@ class IceSphereApp extends StatelessWidget {
         '/house_detail': (context) => const HouseDetailPage(),
         '/house_form': (context) => const HouseFormPage(),
         '/camera_guide': (context) => const CameraGuidePage(),
+        '/capture_result': (context) => const CaptureResultPage(imagePaths: [], sessionName: ''),
+        '/ftp_settings': (context) => const FtpSettingsPage(),
         '/panorama_viewer': (context) => const PanoramaViewerPage(),
         '/panorama_upload': (context) => const PanoramaUploadPage(),
         '/stitching_progress': (context) => const StitchingProgressPage(),

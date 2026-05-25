@@ -24,6 +24,9 @@ dependencies:
   flutter_spinkit: ^5.2.0
   path_provider: ^2.1.2
   uuid: ^4.3.3
+  share_plus: ^7.2.1
+  ftpconnect: ^2.0.5
+  archive: ^3.4.10
 
 dev_dependencies:
   flutter_test:

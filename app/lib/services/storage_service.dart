@@ -110,4 +110,19 @@ class StorageKeys {
 
   /// 相机引导设置 - 拍摄延迟（毫秒）
   static const String captureDelay = 'capture_delay';
+
+  /// FTP服务器地址
+  static const String ftpHost = 'ftp_host';
+
+  /// FTP服务器端口
+  static const String ftpPort = 'ftp_port';
+
+  /// FTP用户名
+  static const String ftpUsername = 'ftp_username';
+
+  /// FTP密码
+  static const String ftpPassword = 'ftp_password';
+
+  /// FTP远程目录
+  static const String ftpRemoteDir = 'ftp_remote_dir';
 }

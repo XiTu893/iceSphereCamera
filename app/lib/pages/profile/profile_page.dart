@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/theme_config.dart';
 import '../../services/auth_service.dart';
+import '../../services/ftp_service.dart';
 import '../../widgets/common_widgets.dart';
+import '../camera/ftp_settings_page.dart';
 
 /// 个人中心页面
 /// 显示用户信息和设置选项
@@ -153,6 +155,18 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const Divider(height: 1, indent: 56),
           _MenuItem(
+            icon: Icons.upload_file,
+            title: 'FTP服务器设置',
+            subtitle: _getFtpSubtitle(),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const FtpSettingsPage()),
+              );
+              setState(() {}); // 刷新FTP状态显示
+            },
+          ),
+          const Divider(height: 1, indent: 56),
+          _MenuItem(
             icon: Icons.help_outline,
             title: '使用帮助',
             subtitle: '全景拍摄教程和常见问题',
@@ -172,6 +186,15 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  /// 获取FTP配置状态描述
+  String _getFtpSubtitle() {
+    final config = FtpService.getConfig();
+    if (config.isConfigured) {
+      return '已配置：${config.host}:${config.port}';
+    }
+    return '未配置，点击配置FTP上传';
   }
 
   /// 构建退出登录按钮

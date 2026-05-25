@@ -9,7 +9,7 @@ import '../../config/theme_config.dart';
 import '../../utils/permission_util.dart';
 import '../../widgets/sphere_guide_widget.dart';
 import '../../widgets/common_widgets.dart';
-import '../panorama/stitching_progress_page.dart';
+import 'capture_result_page.dart';
 
 /// 相机引导拍摄页面
 /// 这是应用的核心功能页面：
@@ -260,11 +260,14 @@ class _CameraGuidePageState extends State<CameraGuidePage> {
 
   /// 所有位置拍摄完成
   void _onCaptureComplete() {
-    // 导航到拼接进度页面
+    // 生成会话名称（使用时间戳）
+    final sessionName = DateTime.now().toString().replaceAll(':', '-').substring(0, 19);
+    // 导航到拍摄结果页面，支持本地保存/分享到PC/FTP上传/云端拼接
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (_) => StitchingProgressPage(
-          imagePaths: _capturedImagePaths,
+        builder: (_) => CaptureResultPage(
+          imagePaths: List.from(_capturedImagePaths),
+          sessionName: sessionName,
         ),
       ),
     );
